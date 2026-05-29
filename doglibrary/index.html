@@ -1,334 +1,465 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Isabela Amaral — UI Designer</title>
-<meta content="Portfólio de Isabela Amaral, UI Designer." name="description"/>
-<link href="https://api.fontshare.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
-<style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DogLibrary — Case Study | Isabela Amaral</title>
+  <meta name="description" content="Case study do DogLibrary, projeto de UX/UI Design para apoiar escolhas conscientes na busca por cães compatíveis com rotina e estilo de vida." />
+  <link rel="preconnect" href="https://api.fontshare.com" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
     :root{
-      --pink:#F37AB0;
-      --coral:#FF7167;
-      --purple:#9C97FA;
-      --sky:#91D8E5;
-      --lime:#CDE162;
-      --yellow:#F2D75F;
-      --ink:#1F1F1F;
-      --ink-soft:#747F8B;
-      --ink-muted:#9AA6B3;
-      --hairline:#CAD5E1;
-      --paper:#F9F9F9;
+      --pink:#F37AB0; --coral:#FF7167; --purple:#9C97FA; --sky:#91D8E5; --lime:#CDE162; --yellow:#F2D75F;
+      --ink:#1F1F1F; --ink-soft:#747F8B; --ink-muted:#9AA6B3; --hairline:#CAD5E1; --paper:#F9F9F9;
+      --dog-purple:#7A6DDA; --dog-lavender:#A2A5FF; --dog-pale:#E7E6FF; --dog-blue:#3154C8; --dog-mint:#B5E3D8; --dog-coral:#FD7C5F;
       --glass:rgba(255,255,255,.58);
       --shadow:0 24px 70px rgba(31,31,31,.07), inset 0 1px 0 rgba(255,255,255,.85);
       --ease:cubic-bezier(.22,1,.36,1);
     }
-
     *{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
-    body{
-      background:var(--paper);
-      color:var(--ink);
-      font-family:"Work Sans", system-ui, sans-serif;
-      font-weight:300;
-      letter-spacing:-.005em;
-      -webkit-font-smoothing:antialiased;
-      overflow-x:hidden;
-    }
-    a{color:inherit;text-decoration:none}
-    img,video{display:block;max-width:100%}
-
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      z-index:-2;
-      background:var(--paper);
-    }
-    body::after{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      z-index:-1;
-      opacity:.025;
-      background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-    }
-
-    .container{width:min(100% - 48px, 1240px);margin-inline:auto}
-    .font-display{font-family:"Satoshi", system-ui, sans-serif}
-    .glass{
-      background:var(--glass);
-      border:1px solid rgba(255,255,255,.78);
-      backdrop-filter:blur(22px) saturate(135%);
-      -webkit-backdrop-filter:blur(22px) saturate(135%);
-      box-shadow:var(--shadow);
-    }
-    .section{padding:88px 0}
-    .section-head{display:grid;grid-template-columns:260px 1fr;gap:32px;margin-bottom:48px}
-    .kicker{font-size:11px;text-transform:uppercase;letter-spacing:.22em;color:var(--ink-muted);font-weight:500}
-    h1,h2,h3{font-family:"Satoshi", system-ui, sans-serif;font-weight:500;color:var(--ink);letter-spacing:-.045em}
-    h2{font-size:clamp(2.2rem, 5vw, 4.4rem);line-height:1.02;max-width:900px}
-    p{line-height:1.7;color:var(--ink-soft)}
-
-    .nav-wrap{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:20;width:min(100% - 32px, 980px)}
+    body{background:var(--paper);color:var(--ink);font-family:"Work Sans",system-ui,sans-serif;font-weight:300;letter-spacing:-.005em;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    a{color:inherit;text-decoration:none} img,video{display:block;max-width:100%}
+    body.loading{overflow:hidden}
+    .loader{position:fixed;inset:0;z-index:999;background:var(--paper);display:grid;place-items:center;transition:opacity .7s var(--ease),visibility .7s var(--ease)}
+    .loader.hidden{opacity:0;visibility:hidden}
+    .loader-orb{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--dog-lavender),var(--dog-mint),var(--dog-coral));filter:blur(.2px);animation:liquid 2.4s ease-in-out infinite;box-shadow:0 20px 80px rgba(122,109,218,.20)}
+    .page{position:relative;isolation:isolate;overflow:hidden}
+    .page::before{content:"";position:fixed;inset:-20%;z-index:-2;pointer-events:none;background:radial-gradient(circle at 7% 8%,rgba(162,165,255,.22),transparent 27%),radial-gradient(circle at 92% 12%,rgba(181,227,216,.24),transparent 30%),radial-gradient(circle at 50% 100%,rgba(253,124,95,.12),transparent 34%);animation:aurora 18s ease-in-out infinite alternate}
+    .noise{position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.025;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
+    @keyframes aurora{0%{transform:translate3d(0,0,0) scale(1)}100%{transform:translate3d(2.5%, -2%,0) scale(1.03)}}
+    @keyframes liquid{0%,100%{border-radius:53% 47% 65% 35%/48% 52% 48% 52%;transform:rotate(0)}50%{border-radius:35% 65% 42% 58%/60% 35% 65% 40%;transform:rotate(16deg)}}
+    .container{width:min(100% - 48px,1240px);margin-inline:auto}.font-display{font-family:"Satoshi",system-ui,sans-serif}
+    .glass{background:var(--glass);border:1px solid rgba(255,255,255,.78);backdrop-filter:blur(22px) saturate(135%);-webkit-backdrop-filter:blur(22px) saturate(135%);box-shadow:var(--shadow)}
+    .nav-wrap{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:50;width:min(100% - 32px,980px)}
     nav{height:54px;border-radius:999px;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:0 18px}
-    .brand{font-family:"Satoshi";font-size:14px;font-weight:500;letter-spacing:-.02em}
-    .brand span{color:var(--coral)}
-    .nav-links{display:flex;gap:28px;list-style:none;font-size:12.5px;color:var(--ink-soft)}
-    .nav-links a{transition:.3s var(--ease)}
-    .nav-links a:hover{color:var(--ink)}
-    .nav-cta{font-size:12.5px;padding:8px 16px;background:var(--ink);color:var(--paper);border-radius:999px;transition:.3s var(--ease)}
-    .nav-cta:hover{transform:translateY(-2px)}
+    .brand{font-family:"Satoshi";font-size:14px;font-weight:500;letter-spacing:-.02em}.brand span{color:var(--coral)}
+    .nav-links{display:flex;gap:28px;list-style:none;font-size:12.5px;color:var(--ink-soft)}.nav-links a{transition:.3s var(--ease)}.nav-links a:hover{color:var(--ink)}
+    .nav-cta{font-size:12.5px;padding:8px 16px;background:var(--ink);color:var(--paper);border-radius:999px;transition:.3s var(--ease)}.nav-cta:hover{transform:translateY(-2px)}
+    section{padding:88px 0}.section-head{display:grid;grid-template-columns:260px 1fr;gap:32px;margin-bottom:48px}.kicker{font-size:11px;text-transform:uppercase;letter-spacing:.22em;color:var(--ink-muted);font-weight:500}
+    h1,h2,h3{font-family:"Satoshi",system-ui,sans-serif;font-weight:500;color:var(--ink);letter-spacing:-.045em}h2{font-size:clamp(2.2rem,5vw,4.4rem);line-height:1.02;max-width:900px}p{line-height:1.7;color:var(--ink-soft)}
+    .reveal{opacity:0;transform:translateY(34px);filter:blur(8px);transition:opacity .9s var(--ease),transform .9s var(--ease),filter .9s var(--ease)}.reveal.visible{opacity:1;transform:none;filter:blur(0)}
+    .hero{min-height:92svh;padding:130px 0 58px;display:flex;align-items:center}.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+    h1{font-size:clamp(4.8rem,12vw,11rem);line-height:.86;letter-spacing:-.065em}.hero-copy{max-width:630px;margin-top:28px;font-size:clamp(1.05rem,2vw,1.18rem)}
+    .chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:32px}.chip{font-size:11.5px;color:var(--ink-soft);padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.9)}
+    .hero-visual{position:relative;border-radius:34px;padding:12px;overflow:hidden}.hero-visual::before{content:"";position:absolute;inset:-25%;background:radial-gradient(circle at 20% 20%,rgba(181,227,216,.55),transparent 35%),radial-gradient(circle at 85% 80%,rgba(253,124,95,.22),transparent 32%);animation:aurora 14s ease-in-out infinite alternate}.hero-visual img{position:relative;width:100%;border-radius:26px;transform:translate3d(var(--mx,0),var(--my,0),0);transition:transform .25s ease-out}
+    .meta-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:44px}.meta-card{border-radius:26px;padding:20px;transition:.45s var(--ease)}.meta-card:hover{transform:translateY(-4px)}.meta-card span{display:block;margin-bottom:10px}.meta-card strong{font-weight:500;font-size:15px;line-height:1.35}
+    .problem-list,.solutions,.architecture{display:grid;gap:16px}.problem-list{margin-top:34px}.problem-item,.solution-card,.arch-card,.compare-card,.decision,.gallery-shell,.palette-section,.final-card,.meta-card{background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.82);box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+    .problem-item{border-radius:28px;padding:24px;display:grid;grid-template-columns:44px 1fr;gap:18px;transition:.45s var(--ease)}.problem-item:hover{transform:translateY(-4px)}.problem-number{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--dog-pale);color:var(--dog-blue);font-family:"Satoshi";font-weight:500;font-size:13px}.problem-item h3,.solution-card h3,.arch-card h3,.decision h3{font-size:22px;margin-bottom:8px}.problem-item p,.solution-card p,.arch-card p,.decision p{font-size:14.5px;color:var(--ink-soft)}
+    .split{display:grid;grid-template-columns:260px 1fr;gap:32px}.quote-card{margin-top:34px;border-radius:34px;padding:42px;background:linear-gradient(135deg,rgba(162,165,255,.9),rgba(181,227,216,.9));color:white;position:relative;overflow:hidden}.quote-card::after{content:"";position:absolute;right:-80px;top:-80px;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,.55);filter:blur(40px);animation:float 7s ease-in-out infinite}.quote-card h3{font-size:clamp(2rem,4.4vw,4rem);line-height:1;letter-spacing:-.055em;color:white;position:relative;z-index:1}
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(20px)}}
+    .architecture{grid-template-columns:repeat(4,1fr);margin-top:40px}.arch-card{border-radius:28px;padding:26px;min-height:190px;display:flex;flex-direction:column;justify-content:space-between;transition:.45s var(--ease)}.arch-card:hover{transform:translateY(-5px)}.arch-card span{font-size:11px;color:var(--ink-muted);letter-spacing:.18em}
+    .wire-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:42px}.compare-card{border-radius:32px;padding:12px}.compare-card img{width:100%;height:340px;object-fit:cover;object-position:top;border-radius:24px;background:#eee}.caption{display:flex;justify-content:space-between;gap:18px;padding:18px 8px 8px}.caption h3{font-size:20px}.caption span{font-size:11px;color:var(--ink-muted);letter-spacing:.16em;text-transform:uppercase;white-space:nowrap}
+    .solutions{grid-template-columns:repeat(3,1fr);margin-top:42px}.solution-card{border-radius:28px;padding:28px;transition:.45s var(--ease)}.solution-card:hover{transform:translateY(-5px)}.solution-card .dot{width:12px;height:12px;border-radius:50%;margin-bottom:42px}
+    .palette-section{border-radius:42px;padding:50px;margin-top:10px}.palette-top{display:grid;grid-template-columns:1fr 1fr;gap:42px;align-items:end;margin-bottom:34px}.palette-title h2{font-size:clamp(2.2rem,5vw,4.8rem);line-height:1.03}.palette-title p{max-width:580px;margin-top:18px}.unlock-panel{min-height:170px;border-radius:28px;padding:26px;background:rgba(249,249,249,.72);border:1px solid rgba(202,213,225,.45)}.unlock-panel small{font-size:11px;text-transform:uppercase;letter-spacing:.18em;color:var(--ink-muted)}.unlock-panel h3{font-size:28px;margin:16px 0 10px}.color-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}.color-card{font-family:inherit;color:inherit;text-align:left;border:0;border-radius:26px;padding:14px;background:rgba(249,249,249,.74);border:1px solid rgba(202,213,225,.5);cursor:pointer;transition:.45s var(--ease)}.color-card:hover{transform:translateY(-5px)}.swatch{width:100%;aspect-ratio:1;border-radius:18px;margin-bottom:14px}.color-card strong{display:block;font-weight:500;font-size:14px}.color-card span{font-size:12px;color:var(--ink-muted)}
+    .interface-gallery{margin-top:44px}.gallery-shell{border-radius:40px;padding:34px;position:relative;overflow:visible}.gallery-stage{position:relative;min-height:560px;display:grid;place-items:center}.gallery-bg-card{position:absolute;width:min(38%,390px);height:78%;border-radius:28px;overflow:hidden;filter:blur(3px);opacity:.46;transform:scale(.88);transition:.7s var(--ease);background:#fff}.gallery-bg-card.left{left:0}.gallery-bg-card.right{right:0}.gallery-bg-card img{width:100%;height:100%;object-fit:cover;object-position:top}.gallery-main{position:relative;z-index:2;width:min(72%,780px);border-radius:32px;padding:10px;background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.85);box-shadow:0 24px 80px rgba(31,31,31,.10);transition:.7s var(--ease)}.gallery-main img{width:100%;max-height:520px;object-fit:contain;object-position:top;border-radius:24px;background:#f1f1f1}.gallery-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:5;display:flex;align-items:center;justify-content:center}.gallery-nav.left{left:clamp(6px,1.2vw,14px)}.gallery-nav.right{right:clamp(6px,1.2vw,14px)}.gallery-info{margin-top:24px;text-align:center;max-width:620px;margin-left:auto;margin-right:auto}.gallery-info h3{font-size:26px}.gallery-info p{font-size:14px;margin-top:6px}.gallery-button{width:56px;height:56px;border:1px solid rgba(255,255,255,.85);border-radius:50%;background:rgba(255,255,255,.74);color:var(--ink);cursor:pointer;font-size:28px;line-height:1;display:grid;place-items:center;box-shadow:0 14px 38px rgba(31,31,31,.10);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);transition:.35s var(--ease)}.gallery-button:hover{transform:translateY(-3px) scale(1.05);background:var(--ink);color:white}
+    .ui-decisions{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:38px}.decision{border-radius:28px;padding:26px;min-height:220px}.decision span{font-size:11px;color:var(--dog-coral);letter-spacing:.18em}.decision h3{margin-top:34px}
+    .final-card{border-radius:42px;padding:58px;text-align:center;background:linear-gradient(135deg,rgba(162,165,255,.17),rgba(181,227,216,.22),rgba(253,124,95,.11))}.final-card h2{font-size:clamp(2.4rem,5vw,5rem);line-height:1.03}.final-card p{max-width:740px;margin:24px auto 0;font-size:17px}
+    .footer{padding:44px 0 70px;color:var(--ink-muted);font-size:13px}.footer-inner{border-top:1px solid rgba(202,213,225,.65);padding-top:26px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    @media(max-width:980px){.nav-links{display:none}.hero-grid,.split,.section-head,.palette-top{grid-template-columns:1fr}.meta-strip,.architecture,.solutions,.ui-decisions{grid-template-columns:1fr 1fr}.wire-grid{grid-template-columns:1fr}.color-grid{grid-template-columns:repeat(3,1fr)}.gallery-stage{min-height:430px}.gallery-main{width:88%}.gallery-bg-card{display:none}.compare-card img{height:auto}}
+    @media(max-width:640px){.container{width:min(100% - 28px,1240px)}section{padding:68px 0}.hero{padding-top:112px}.meta-strip,.architecture,.solutions,.ui-decisions,.color-grid{grid-template-columns:1fr}.palette-section,.final-card,.gallery-shell{padding:24px}h1{font-size:4rem}.gallery-main{width:100%}.gallery-main img{max-height:420px}.gallery-nav{top:auto;bottom:-28px;transform:none}.gallery-nav.left{left:calc(50% - 42px)}.gallery-nav.right{right:calc(50% - 42px)}.gallery-info{margin-top:70px}}
+  </style>
 
-    .hero{min-height:92svh;padding:130px 0 56px;display:flex;align-items:center}
-    .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:center}
-    .hello{font-family:"Satoshi";font-style:italic;color:var(--ink-soft);font-size:clamp(1rem, 2vw, 1.25rem);margin-bottom:20px}
-    h1{font-size:clamp(4.8rem, 14vw, 13rem);line-height:.86;letter-spacing:-.065em}
-    h1 .accent{font-style:italic;font-weight:300;color:var(--coral)}
-    .hero-copy{max-width:600px;margin-top:30px;font-size:clamp(1.05rem, 2vw, 1.18rem)}
-    .hero-copy strong{color:var(--ink);font-weight:400}
-    .hero-actions{display:flex;gap:16px;align-items:center;margin-top:40px;flex-wrap:wrap}
-    .primary-btn{display:inline-flex;align-items:center;gap:12px;background:var(--ink);color:var(--paper);border-radius:999px;padding:10px 10px 10px 24px;font-size:14px;transition:.45s var(--ease)}
-    .primary-btn:hover{transform:translateY(-3px)}
-    .primary-btn span{height:34px;width:34px;display:grid;place-items:center;border-radius:50%;background:var(--paper);color:var(--ink);transition:.45s var(--ease)}
-    .primary-btn:hover span{transform:rotate(45deg)}
-    .text-link{font-size:14px;color:var(--ink-soft);text-decoration:underline;text-underline-offset:8px;text-decoration-color:transparent;transition:.3s var(--ease)}
-    .text-link:hover{color:var(--ink);text-decoration-color:var(--ink)}
-    .portrait-area{position:relative;min-height:520px}
-    .portrait-card{width:min(88%,430px);margin-left:auto;aspect-ratio:4/5;border-radius:32px;overflow:hidden;display:flex;align-items:end;justify-content:center;background:rgba(255,255,255,.7)}
-    .portrait-card img{width:100%;height:100%;object-fit:contain;filter:grayscale(1) contrast(1.05)}
-    .current-card{position:absolute;left:-20px;bottom:50px;width:min(290px, 82vw);border-radius:26px;padding:22px}
-    .current-card .kicker{display:block;margin-bottom:10px}
-    .current-card p{font-size:14px;line-height:1.45;color:var(--ink)}
-
-    .marquee{overflow:hidden;border-block:1px solid rgba(202,213,225,.65);padding:18px 0;margin-top:24px}
-    .marquee-track{display:flex;width:max-content;gap:48px;animation:marquee 32s linear infinite;color:var(--ink-muted);font-family:"Satoshi";font-size:14px;white-space:nowrap}
-    .marquee-group{display:flex;gap:48px}
-    .marquee-item{display:flex;align-items:center;gap:48px}
-    .star{color:var(--coral);font-size:20px;line-height:1}
-    @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-
-    .about-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:48px;margin-top:36px;align-items:start}
-    .quote{border-radius:28px;padding:30px}
-    .quote p{font-family:"Satoshi";font-style:italic;font-size:24px;line-height:1.25;color:var(--ink)}
-    .quote small{display:flex;gap:12px;align-items:center;margin-top:22px;color:var(--ink-muted);font-size:12px}
-    .quote small::before{content:"";width:32px;height:1px;background:var(--ink-muted)}
-
-    .featured-card{border-radius:32px;overflow:hidden;padding:14px;margin-bottom:34px}
-    .featured-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:26px;align-items:stretch}
-    .featured-media{border-radius:26px;overflow:hidden;aspect-ratio:16/10;background:#fff}
-    .featured-media img{width:100%;height:100%;object-fit:cover;object-position:center 35%}
-    .featured-content{padding:34px 28px;display:flex;flex-direction:column;justify-content:space-between;min-height:360px}
-    .project-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:12px;background:var(--coral)}
-    .project-title{font-size:clamp(2rem,4vw,3rem);line-height:.95;margin-top:20px}
-    .project-desc{font-size:15px;max-width:460px;margin-top:22px}
-    .tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:30px}
-    .tag{font-size:11px;color:var(--ink-soft);padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.8)}
-
-    .project-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start}
-    .project-card{height:100%}
-    .project-media{border-radius:28px;overflow:hidden;padding:8px;aspect-ratio:16/11}
-    .project-media-inner{width:100%;height:100%;border-radius:22px;overflow:hidden;background:#fff}
-    .project-media img,.project-media video{width:100%;height:100%;object-fit:cover;transition:1.2s var(--ease)}
-    .project-card:hover .project-media img,.project-card:hover .project-media video{transform:scale(1.035)}
-    .project-meta{display:flex;justify-content:space-between;gap:18px;margin-top:18px;padding:0 4px}
-    .project-meta h3{font-size:24px;line-height:1}
-    .project-meta small{display:block;margin-top:8px;color:var(--ink-muted);font-size:12px}
-    .project-label{text-transform:uppercase;letter-spacing:.16em;font-size:11px;color:var(--ink-soft);text-align:right}
-    .project-card-desc{font-size:14px;margin-top:12px;padding:0 4px;max-width:520px}
-
-    .skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-    .skill-card{position:relative;border-radius:30px;padding:34px;min-height:250px;transition:.45s var(--ease)}
-    .skill-card:hover{transform:translateY(-4px)}
-    .skill-dot{position:absolute;top:28px;left:28px;width:10px;height:10px;border-radius:50%;box-shadow:0 0 18px currentColor}
-    .skill-number{display:block;text-align:right;font-size:12px;letter-spacing:.2em;color:var(--ink-muted);font-weight:500}
-    .skill-card h3{font-size:28px;line-height:1.02;margin-top:70px;letter-spacing:-.04em}
-    .skill-card p{font-size:15px;margin-top:18px}
-
-    .contact{padding-bottom:120px}
-    .contact-title{font-size:clamp(3.5rem,9vw,8rem);line-height:.9;margin-top:20px}
-    .contact-title em{font-weight:300;color:var(--coral)}
-    .contact-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;margin-top:58px;align-items:stretch}
-    .email-card{border-radius:30px;padding:34px;display:flex;justify-content:space-between;align-items:center;min-height:250px;transition:.45s var(--ease)}
-    .email-card:hover,.social-card:hover{transform:translateY(-4px)}
-    .email-card p:last-child{font-family:"Satoshi";font-size:clamp(1.5rem,3vw,2rem);color:var(--ink);margin-top:14px}
-    .arrow{height:48px;width:48px;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;transition:.45s var(--ease);flex-shrink:0}
-    .email-card:hover .arrow{transform:rotate(45deg)}
-    .social-list{display:grid;gap:18px}
-    .social-card{border-radius:24px;padding:24px;display:flex;justify-content:space-between;align-items:center;min-height:96px;transition:.45s var(--ease)}
-    .social-card p:last-child{margin-top:8px;color:var(--ink);font-size:15px}
-    .social-dot{width:8px;height:8px;border-radius:50%;box-shadow:0 0 14px currentColor;flex-shrink:0}
-
-    footer{border-top:1px solid rgba(202,213,225,.65);padding:32px 0;color:var(--ink-muted);font-size:12px}
-    .footer-inner{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
-    .footer-inner em{font-family:"Satoshi"}
-
-    .reveal{opacity:0;transform:translateY(22px);filter:blur(8px);transition:opacity 1s var(--ease),transform 1s var(--ease),filter 1s var(--ease)}
-    .reveal.in{opacity:1;transform:none;filter:blur(0)}
-    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
-    .float{animation:float 8s var(--ease) infinite}
-
-    @media (max-width:920px){
-      .nav-links{display:none}
-      .hero-grid,.featured-grid,.about-grid,.contact-grid{grid-template-columns:1fr}
-      .portrait-area{order:-1;min-height:auto}
-      .portrait-card{margin-inline:auto;width:min(88%,360px)}
-      .current-card{position:relative;left:auto;bottom:auto;margin:18px auto 0;width:min(360px,100%)}
-      .section-head{grid-template-columns:1fr;margin-bottom:34px}
-      .project-grid,.skills-grid{grid-template-columns:1fr}
-      .featured-content{min-height:auto;padding:24px 10px}
-      .section{padding:64px 0}
-      .hero{padding-top:112px}
-      .email-card{min-height:180px}
+<style id="doglibrary-final-alignment-fix">
+  .final-card{
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:center !important;
+    justify-content:center !important;
+    text-align:center !important;
+    min-height:430px !important;
+    padding:72px 48px !important;
+  }
+  .final-card h2,
+  .final-card p{
+    margin-left:auto !important;
+    margin-right:auto !important;
+    text-align:center !important;
+  }
+  .final-card h2{max-width:1180px !important;}
+  .final-card p{max-width:850px !important;}
+  @media(max-width:720px){
+    .final-card{
+      min-height:auto !important;
+      padding:48px 24px !important;
     }
-  .project-arrow{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;margin-left:10px;border-radius:50%;background:var(--ink);color:var(--paper);font-size:18px;vertical-align:middle;transition:.35s var(--ease)}.featured-card:hover .project-arrow{transform:rotate(45deg) translateY(-2px)}
+  }
 </style>
 
-<style id="project-section-hard-fix">
-#work{
-  display:block !important;
-  overflow:visible !important;
-}
+<style id="doglibrary-kidzenith-gallery-style">
+  .mockup-hero{display:none !important;}
 
-#work .container{
-  width:min(1240px, calc(100% - 48px));
-  margin-inline:auto;
-}
-
-#work .project-link-card{
-  display:block !important;
-  color:inherit !important;
-  text-decoration:none !important;
-  cursor:pointer !important;
-}
-
-#work .featured-card{
-  display:block !important;
-  width:100% !important;
-  margin-top:34px !important;
-  margin-bottom:34px !important;
-  overflow:hidden !important;
-}
-
-#work .featured-grid{
-  display:grid !important;
-  grid-template-columns:1.25fr .85fr !important;
-  gap:36px !important;
-  align-items:stretch !important;
-}
-
-#work .featured-media{
-  min-height:420px !important;
-  max-height:560px !important;
-  overflow:hidden !important;
-  border-radius:28px !important;
-}
-
-#work .featured-media img{
-  width:100% !important;
-  height:100% !important;
-  object-fit:cover !important;
-  display:block !important;
-}
-
-#work .featured-content{
-  min-height:420px !important;
-  display:flex !important;
-  flex-direction:column !important;
-  justify-content:space-between !important;
-  padding:28px !important;
-}
-
-#work .project-grid{
-  display:grid !important;
-  grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
-  gap:28px !important;
-  align-items:start !important;
-}
-
-#work .project-card{
-  display:block !important;
-  width:100% !important;
-  height:auto !important;
-  min-height:0 !important;
-  overflow:visible !important;
-}
-
-#work .project-media{
-  width:100% !important;
-  aspect-ratio:16/11 !important;
-  max-height:none !important;
-  overflow:hidden !important;
-  border-radius:28px !important;
-  padding:8px !important;
-}
-
-#work .project-media-inner{
-  width:100% !important;
-  height:100% !important;
-  border-radius:22px !important;
-  overflow:hidden !important;
-}
-
-#work .project-media img,
-#work .project-media video{
-  width:100% !important;
-  height:100% !important;
-  object-fit:cover !important;
-  display:block !important;
-}
-
-#work .project-link-card:hover img,
-#work .project-card:hover img{
-  transform:scale(1.025);
-}
-
-#work .project-media img{
-  transition:transform .9s cubic-bezier(.22,1,.36,1);
-}
-
-#work .project-arrow{
-  display:inline-flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  width:34px !important;
-  height:34px !important;
-  margin-left:10px !important;
-  border-radius:50% !important;
-  background:var(--ink) !important;
-  color:var(--paper) !important;
-  font-size:18px !important;
-  vertical-align:middle !important;
-  transition:transform .35s cubic-bezier(.22,1,.36,1) !important;
-}
-
-#work .project-link-card:hover .project-arrow{
-  transform:translate(4px,-4px) rotate(8deg) !important;
-}
-
-#work .project-label{
-  max-width:270px;
-}
-
-@media(max-width:900px){
-  #work .featured-grid,
-  #work .project-grid{
-    grid-template-columns:1fr !important;
+  .dog-screen-stage{
+    position:relative;
+    min-height:600px;
+    display:grid;
+    place-items:center;
+    perspective:1200px;
   }
 
-  #work .featured-media,
-  #work .featured-content{
-    min-height:auto !important;
+  .dog-screen-main{
+    position:relative;
+    z-index:3;
+    width:min(520px, 76vw);
+    aspect-ratio:1440/1799;
+    border-radius:36px;
+    overflow:hidden;
+    background:#fff;
+    border:1px solid rgba(255,255,255,.88);
+    box-shadow:0 34px 96px rgba(31,31,31,.13), 0 18px 60px rgba(122,109,218,.12);
+    transition:transform .28s ease;
   }
-}
+
+  .dog-screen-main img,
+  .dog-screen-ghost img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:top center;
+    display:block;
+  }
+
+  .dog-screen-ghost{
+    position:absolute;
+    width:min(420px, 56vw);
+    aspect-ratio:1440/1799;
+    border-radius:32px;
+    overflow:hidden;
+    background:#fff;
+    border:1px solid rgba(255,255,255,.74);
+    opacity:.34;
+    filter:blur(3px);
+    box-shadow:0 24px 70px rgba(31,31,31,.09);
+    animation:dogFloat 7s ease-in-out infinite;
+  }
+
+  .dog-screen-ghost.left{
+    transform:translateX(-210px) scale(.76) rotate(-7deg);
+  }
+
+  .dog-screen-ghost.right{
+    transform:translateX(210px) scale(.76) rotate(7deg);
+    animation-delay:1.4s;
+  }
+
+  @keyframes dogFloat{
+    0%,100%{margin-top:0}
+    50%{margin-top:-18px}
+  }
+
+  .dog-mockup-section{
+    overflow:hidden;
+  }
+
+  .dog-gallery-wrap{
+    position:relative;
+    min-height:680px;
+    display:grid;
+    place-items:center;
+    margin-top:48px;
+    overflow:visible;
+  }
+
+  .dog-gallery-frame{
+    position:relative;
+    z-index:4;
+    width:min(760px, 68vw);
+    aspect-ratio:1440/1799;
+    max-height:620px;
+    border-radius:36px;
+    overflow:hidden;
+    background:#fff;
+    border:1px solid rgba(255,255,255,.88);
+    box-shadow:0 30px 90px rgba(31,31,31,.12);
+    transition:opacity .35s ease, transform .35s ease;
+  }
+
+  .dog-gallery-frame img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:top center;
+    display:block;
+  }
+
+  .dog-gallery-ghost{
+    position:absolute;
+    width:min(540px, 48vw);
+    aspect-ratio:1440/1799;
+    max-height:540px;
+    border-radius:32px;
+    overflow:hidden;
+    opacity:.34;
+    filter:blur(3px);
+    background:#fff;
+    border:1px solid rgba(255,255,255,.7);
+    box-shadow:0 24px 70px rgba(31,31,31,.08);
+    transition:.5s ease;
+    z-index:1;
+  }
+
+  .dog-gallery-ghost.left{
+    transform:translateX(-360px) scale(.78) rotate(-5deg);
+  }
+
+  .dog-gallery-ghost.right{
+    transform:translateX(360px) scale(.78) rotate(5deg);
+  }
+
+  .dog-gallery-ghost img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:top center;
+    display:block;
+  }
+
+  .dog-gallery-control{
+    position:absolute;
+    top:50%;
+    z-index:6;
+    width:56px;
+    height:56px;
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,.82);
+    background:rgba(255,255,255,.76);
+    color:#1F1F1F;
+    font-size:30px;
+    line-height:1;
+    cursor:pointer;
+    display:grid;
+    place-items:center;
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    box-shadow:0 14px 38px rgba(31,31,31,.10);
+    transition:.35s cubic-bezier(.22,1,.36,1);
+  }
+
+  .dog-gallery-control.left{left:clamp(0px, 2vw, 24px);}
+  .dog-gallery-control.right{right:clamp(0px, 2vw, 24px);}
+
+  .dog-gallery-control:hover{
+    transform:translateY(-4px) scale(1.05);
+    background:#1F1F1F;
+    color:#fff;
+  }
+
+  .dog-gallery-caption{
+    text-align:center;
+    max-width:620px;
+    margin:24px auto 0;
+  }
+
+  .dog-gallery-caption h3{
+    font-size:28px;
+    letter-spacing:-.045em;
+    font-weight:500;
+  }
+
+  .dog-gallery-caption p{
+    color:#667282;
+    line-height:1.65;
+    margin-top:8px;
+    font-size:15px;
+  }
+
+  @media(max-width:980px){
+    .dog-screen-stage{min-height:560px;}
+    .dog-screen-ghost.left{transform:translateX(-150px) scale(.68) rotate(-7deg);}
+    .dog-screen-ghost.right{transform:translateX(150px) scale(.68) rotate(7deg);}
+    .dog-gallery-wrap{min-height:auto; padding-bottom:76px;}
+    .dog-gallery-frame{width:min(760px, 82vw); max-height:none;}
+    .dog-gallery-ghost{display:none;}
+    .dog-gallery-control{top:auto; bottom:0;}
+    .dog-gallery-control.left{left:calc(50% - 66px);}
+    .dog-gallery-control.right{right:calc(50% - 66px);}
+  }
+
+  @media(max-width:640px){
+    .dog-screen-stage{min-height:460px;}
+    .dog-screen-ghost{display:none;}
+    .dog-screen-main{width:min(100%, 360px);}
+    .dog-gallery-frame{width:100%;}
+  }
 </style>
+
+
+<style id="doglibrary-hero-no-mockup-final">
+  .mockup-hero,
+  .mockup-hero *,
+  img[src*="dog-mockup-laptop"]{
+    display:none !important;
+  }
+
+  .dog-hero-stage{
+    position:relative;
+    min-height:620px;
+    display:grid;
+    place-items:center;
+    perspective:1200px;
+    overflow:visible;
+  }
+
+  .dog-hero-phone{
+    position:absolute;
+    aspect-ratio:1440 / 1799;
+    overflow:hidden;
+    background:#fff;
+    border:1px solid rgba(255,255,255,.86);
+    box-shadow:0 30px 90px rgba(31,31,31,.10);
+  }
+
+  .dog-hero-phone img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:top center;
+    display:block;
+  }
+
+  .dog-hero-phone.main{
+    position:relative;
+    z-index:3;
+    width:min(520px, 76vw);
+    border-radius:38px;
+    box-shadow:
+      0 36px 105px rgba(31,31,31,.14),
+      0 18px 60px rgba(122,109,218,.14);
+    transition:transform .28s ease;
+  }
+
+  .dog-hero-phone.ghost{
+    width:min(430px, 56vw);
+    border-radius:32px;
+    opacity:.34;
+    filter:blur(3px);
+    z-index:1;
+    animation:dogHeroFloat 7s ease-in-out infinite;
+  }
+
+  .dog-hero-phone.ghost.left{
+    transform:translateX(-230px) scale(.74) rotate(-7deg);
+  }
+
+  .dog-hero-phone.ghost.right{
+    transform:translateX(230px) scale(.74) rotate(7deg);
+    animation-delay:1.3s;
+  }
+
+  @keyframes dogHeroFloat{
+    0%,100%{margin-top:0}
+    50%{margin-top:-18px}
+  }
+
+  @media(max-width:980px){
+    .dog-hero-stage{min-height:560px;}
+    .dog-hero-phone.ghost.left{
+      transform:translateX(-150px) scale(.68) rotate(-7deg);
+    }
+    .dog-hero-phone.ghost.right{
+      transform:translateX(150px) scale(.68) rotate(7deg);
+    }
+  }
+
+  @media(max-width:640px){
+    .dog-hero-stage{min-height:460px;}
+    .dog-hero-phone.ghost{display:none !important;}
+    .dog-hero-phone.main{width:min(100%, 360px);}
+  }
+</style>
+
+
+<style id="doglibrary-hero-stage-final-fix">
+  .hero-visual{
+    display:none !important;
+    background-image:none !important;
+  }
+
+  .dog-hero-stage{
+    position:relative;
+    min-height:620px;
+    display:grid;
+    place-items:center;
+    perspective:1200px;
+    overflow:visible;
+  }
+
+  .dog-hero-phone{
+    position:absolute;
+    aspect-ratio:1440 / 1799;
+    overflow:hidden;
+    background:#fff;
+    border:1px solid rgba(255,255,255,.86);
+    box-shadow:0 30px 90px rgba(31,31,31,.10);
+  }
+
+  .dog-hero-phone img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:top center;
+    display:block;
+  }
+
+  .dog-hero-phone.main{
+    position:relative;
+    z-index:3;
+    width:min(520px, 76vw);
+    border-radius:38px;
+    box-shadow:
+      0 36px 105px rgba(31,31,31,.14),
+      0 18px 60px rgba(122,109,218,.14);
+    transition:transform .28s ease;
+  }
+
+  .dog-hero-phone.ghost{
+    width:min(430px, 56vw);
+    border-radius:32px;
+    opacity:.34;
+    filter:blur(3px);
+    z-index:1;
+    animation:dogHeroFloat 7s ease-in-out infinite;
+  }
+
+  .dog-hero-phone.ghost.left{
+    transform:translateX(-230px) scale(.74) rotate(-7deg);
+  }
+
+  .dog-hero-phone.ghost.right{
+    transform:translateX(230px) scale(.74) rotate(7deg);
+    animation-delay:1.3s;
+  }
+
+  @keyframes dogHeroFloat{
+    0%,100%{margin-top:0}
+    50%{margin-top:-18px}
+  }
+
+  @media(max-width:980px){
+    .dog-hero-stage{min-height:560px;}
+    .dog-hero-phone.ghost.left{transform:translateX(-150px) scale(.68) rotate(-7deg);}
+    .dog-hero-phone.ghost.right{transform:translateX(150px) scale(.68) rotate(7deg);}
+  }
+
+  @media(max-width:640px){
+    .dog-hero-stage{min-height:460px;}
+    .dog-hero-phone.ghost{display:none !important;}
+    .dog-hero-phone.main{width:min(100%, 360px);}
+  }
+</style>
+
+
+<style id="global-gallery-side-arrows-standard">
+  .dog-gallery-control,
+  .gallery-side-control{
+    cursor:pointer;
+  }
+</style>
+
+
 <style id="portfolio-animation-performance-fix">
   html{ scroll-behavior:smooth; }
 
@@ -394,19 +525,6 @@
       scroll-behavior:auto !important;
       transition-duration:.001ms !important;
     }
-  }
-</style>
-
-
-<style id="terpafy-home-link-style">
-  #work .terpafy-link{
-    display:block !important;
-    color:inherit !important;
-    text-decoration:none !important;
-    cursor:pointer !important;
-  }
-  #work .terpafy-link:hover{
-    text-decoration:none !important;
   }
 </style>
 
@@ -655,31 +773,7 @@
   }
 </style>
 
-
-<style id="arete-current-card-link-fix">
-  .arete-current-link{
-    display:block;
-    color:inherit;
-    text-decoration:none;
-    cursor:pointer;
-  }
-
-  .arete-current-link > *{
-    transition:transform .35s ease, box-shadow .35s ease, border-color .35s ease;
-  }
-
-  .arete-current-link:hover > *{
-    transform:translateY(-3px);
-  }
-
-  .arete-current-link:focus-visible{
-    outline:2px solid #FF7167;
-    outline-offset:6px;
-    border-radius:28px;
-  }
-</style>
-
-<link rel="stylesheet" href="assets/css/portfolio-system.css"/>
+<link rel="stylesheet" href="/assets/css/portfolio-system.css"/>
 
 <style id="portfolio-global-refactor-final">
   :root{
@@ -1329,138 +1423,164 @@ body > nav.nav{
 }
 
 </style>
-<style id="home-project-cards-clean-fix">
+<style id="portfolio-loaders-final">
 
-/* Correção dos cards da home: remove fundo visual estranho atrás das infos */
-.home-page .project-card{
-  overflow:hidden !important;
-  background:transparent !important;
+.loader,
+.kz-loader,
+.terpafy-loader{
+  position:fixed;
+  inset:0;
+  z-index:2000;
+  display:grid;
+  place-items:center;
+  background:rgba(249,249,249,.92);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  transition:opacity .45s ease, visibility .45s ease;
 }
 
-.home-page .project-card::before,
-.home-page .project-card::after{
-  pointer-events:none !important;
+.loader.hidden,
+.kz-loader.hidden,
+.terpafy-loader.hidden{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
 }
 
-.home-page .project-card .project-media,
-.home-page .project-card .project-visual,
-.home-page .project-card .project-image,
-.home-page .project-card .project-cover,
-.home-page .project-card figure{
-  overflow:hidden !important;
-  border-radius:28px !important;
-  background:transparent !important;
+body.loading{
+  overflow:hidden;
 }
 
-.home-page .project-card img,
-.home-page .project-card video{
-  display:block !important;
-  width:100% !important;
-  height:100% !important;
-  object-fit:cover !important;
-  background:transparent !important;
+35%{transform:translateX(62px) translateY(-6px) rotate(3deg);}
+  70%{transform:translateX(122px) translateY(0) rotate(-2deg);}
+  100%{transform:translateX(0) translateY(0) rotate(-3deg);}
 }
 
-/* A área textual não deve ter bloco/fundo próprio */
-.home-page .project-card .project-info,
-.home-page .project-card .project-content,
-.home-page .project-card .project-meta,
-.home-page .project-card .project-body,
-.home-page .project-card figcaption{
-  background:transparent !important;
-  box-shadow:none !important;
-  backdrop-filter:none !important;
-  -webkit-backdrop-filter:none !important;
+.kz-loader-card{
+  text-align:center;
+  display:grid;
+  justify-items:center;
+  gap:14px;
+  color:#8A80FF;
+  font-weight:500;
 }
 
-/* Evita que tags/metadados com tracking largo criem uma faixa visual */
-.home-page .project-card .project-tags,
-.home-page .project-card .tags{
-  background:transparent !important;
-  box-shadow:none !important;
+.kz-bye{
+  width:86px;
+  height:86px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  font-size:44px;
+  background:linear-gradient(135deg,#F4F0FF,#EAFDF7);
+  box-shadow:0 24px 80px rgba(138,128,255,.18);
+  animation:kzWave 1.2s ease-in-out infinite;
 }
 
-/* Garante que os cards menores fiquem limpos e proporcionais */
-.home-page .project-card:not(.featured){
-  background:transparent !important;
+@keyframes kzWave{
+  0%,100%{transform:rotate(-6deg) translateY(0);}
+  50%{transform:rotate(8deg) translateY(-4px);}
 }
 
-.home-page .project-card:not(.featured) .project-info,
-.home-page .project-card:not(.featured) .project-content{
-  padding-top:18px !important;
+.terpafy-water-loader{
+  display:grid;
+  justify-items:center;
+  gap:18px;
+  color:#53606E;
+  font-size:13px;
+}
+
+.water-symbol{
+  width:92px;
+  height:92px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  position:relative;
+  overflow:hidden;
+  background:rgba(255,255,255,.78);
+  box-shadow:0 24px 80px rgba(31,31,31,.12);
+}
+
+.water-symbol::before{
+  content:"";
+  position:absolute;
+  left:-20%;
+  right:-20%;
+  bottom:-10%;
+  height:0%;
+  background:linear-gradient(180deg,#0AEDED,#93A603);
+  animation:fillWater 1.55s ease-in-out infinite;
+}
+
+.water-symbol::after{
+  content:"";
+  position:absolute;
+  left:-30%;
+  right:-30%;
+  top:52%;
+  height:22px;
+  border-radius:50%;
+  background:rgba(255,255,255,.38);
+  animation:waterWave 1.55s ease-in-out infinite;
+}
+
+.water-symbol img{
+  width:58px;
+  height:58px;
+  position:relative;
+  z-index:2;
+  filter:brightness(0) invert(1);
+  opacity:.95;
+}
+
+@keyframes fillWater{
+  0%{height:0%;}
+  65%{height:112%;}
+  100%{height:112%;}
+}
+
+@keyframes waterWave{
+  0%{transform:translateX(-12px) translateY(28px);}
+  65%{transform:translateX(10px) translateY(-46px);}
+  100%{transform:translateX(10px) translateY(-46px);}
 }
 
 </style>
-<style id="home-project-cards-text-area-transparent-final">
+<style id="doglibrary-future-ideas-section">
 
-/* Home · correção definitiva da área textual dos cards de projeto */
-.home-page .project-card,
-body.home-page .project-card,
-#projetos .project-card,
-.projects .project-card{
-  background:transparent !important;
-  box-shadow:none !important;
-  border-color:transparent !important;
-  overflow:visible !important;
+.ideas-futuras .animal-ideas{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+  margin-top:30px;
 }
 
-/* Remove qualquer placa/fundo criado por pseudo-elementos no card inteiro */
-.home-page .project-card::before,
-.home-page .project-card::after,
-#projetos .project-card::before,
-#projetos .project-card::after{
-  content:none !important;
-  display:none !important;
+.ideas-futuras .animal-card{
+  border-radius:28px;
+  padding:24px;
+  min-height:210px;
 }
 
-/* A mídia mantém o visual de card. O texto NÃO. */
-.home-page .project-card img,
-.home-page .project-card video,
-#projetos .project-card img,
-#projetos .project-card video{
-  display:block !important;
-  border-radius:28px !important;
-  box-shadow:0 24px 80px rgba(31,31,31,.08) !important;
-  background:transparent !important;
+.ideas-futuras .animal-card span{
+  font-size:30px;
+  display:block;
+  margin-bottom:22px;
 }
 
-/* Qualquer wrapper depois da imagem precisa ficar limpo */
-.home-page .project-card :is(figcaption, .project-info, .project-content, .project-body, .project-meta, .project-text, .card-info, .card-content),
-#projetos .project-card :is(figcaption, .project-info, .project-content, .project-body, .project-meta, .project-text, .card-info, .card-content){
-  background:transparent !important;
-  background-image:none !important;
-  box-shadow:none !important;
-  border:0 !important;
-  backdrop-filter:none !important;
-  -webkit-backdrop-filter:none !important;
+.ideas-futuras .animal-card h3{
+  font-size:20px;
+  margin-bottom:10px;
 }
 
-/* Remove fundos brancos semi-opacos em filhos diretos textuais sem afetar a capa */
-.home-page .project-card > *:not(:first-child),
-#projetos .project-card > *:not(:first-child){
-  background:transparent !important;
-  background-image:none !important;
-  box-shadow:none !important;
-  backdrop-filter:none !important;
-  -webkit-backdrop-filter:none !important;
+.ideas-futuras .animal-card p{
+  color:var(--muted,#7A8594);
+  line-height:1.65;
+  font-size:14px;
 }
 
-/* Tags/metadados não podem criar retângulo branco */
-.home-page .project-card :is(.tags, .project-tags, .project-kicker, .project-label, .project-tools),
-#projetos .project-card :is(.tags, .project-tags, .project-kicker, .project-label, .project-tools){
-  background:transparent !important;
-  background-image:none !important;
-  box-shadow:none !important;
-}
-
-/* Caso o bloco de informações esteja isolado sem classe, remove a placa visual dos elementos após a mídia */
-.home-page .project-card h3,
-.home-page .project-card p,
-.home-page .project-card span,
-#projetos .project-card h3,
-#projetos .project-card p,
-#projetos .project-card span{
-  background:transparent !important;
+@media(max-width:900px){
+  .ideas-futuras .animal-ideas{grid-template-columns:1fr;}
 }
 
 </style>
@@ -1570,55 +1690,60 @@ body.home-page .project-card,
 }
 
 </style>
-  <link rel="canonical" href="https://www.designbela.com/">
-  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-<style id="home-project-labels-one-line-final">
+<style id="doglibrary-section8-final-position-title">
 
-/* Home · project labels em uma linha */
-.home-page .project-card .project-label,
-#work .project-card .project-label{
-  display:inline-flex !important;
-  align-items:center !important;
-  white-space:nowrap !important;
-  flex:0 0 auto !important;
-  width:max-content !important;
-  max-width:100% !important;
-  font-size:10px !important;
-  line-height:1 !important;
-  letter-spacing:-0.01em !important;
+/* DogLibrary · ordem e título final */
+#ideias-futuras .kicker,
+#ideias-futuras .eyebrow{
+  letter-spacing:.22em !important;
 }
 
-.home-page .project-card .project-meta,
-#work .project-card .project-meta{
-  display:flex !important;
-  align-items:flex-start !important;
-  justify-content:space-between !important;
-  gap:12px !important;
+/* Aumenta especificamente o título final */
+.design-final-title{
+  font-size:clamp(40px, 5.2vw, 76px) !important;
+  line-height:1.02 !important;
+  letter-spacing:-.06em !important;
+  text-wrap:balance !important;
+}
+</style>
+  <link rel="canonical" href="https://www.designbela.com/doglibrary">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<style id="doglibrary-loading-gif-final">
+
+/* DogLibrary · loading com GIF personalizado */
+.doglibrary-page .loader,
+body:has(.doglibrary-gif-loader) .loader{
+  position:fixed !important;
+  inset:0 !important;
+  z-index:6000 !important;
+  display:grid !important;
+  place-items:center !important;
+  background:rgba(249,249,249,.94) !important;
+  backdrop-filter:blur(14px) !important;
+  -webkit-backdrop-filter:blur(14px) !important;
+  transition:opacity .45s ease, visibility .45s ease !important;
 }
 
-.home-page .project-card .project-meta > div,
-#work .project-card .project-meta > div{
-  min-width:0 !important;
+.doglibrary-page .loader.hidden,
+body:has(.doglibrary-gif-loader) .loader.hidden{
+  opacity:0 !important;
+  visibility:hidden !important;
+  pointer-events:none !important;
 }
 
-.home-page . .project-label,
-.home-page . .project-label{
-  font-size:9.5px !important;
+.doglibrary-gif-loader{
+  width:min(220px, 46vw) !important;
+  height:min(220px, 46vw) !important;
+  display:grid !important;
+  place-items:center !important;
 }
 
-/* Mantém as tags do card destaque em uma linha também */
-.home-page .featured-card .tags,
-#work .featured-card .tags{
-  display:flex !important;
-  flex-wrap:nowrap !important;
-  gap:8px !important;
-  white-space:nowrap !important;
-}
-
-.home-page .featured-card .tag,
-#work .featured-card .tag{
-  font-size:11px !important;
-  white-space:nowrap !important;
+.doglibrary-gif-loader img{
+  width:100% !important;
+  height:100% !important;
+  object-fit:contain !important;
+  display:block !important;
+  mix-blend-mode:multiply !important;
 }
 
 </style>
@@ -2286,7 +2411,7 @@ body *{
 }
 
 /* cards bloqueados também mostram informação no hover */
-.home-page .{
+.home-page .project-card-locked{
   cursor:not-allowed !important;
 }
 
@@ -2693,7 +2818,7 @@ h3 + p,
 
 .home-page .project-card:hover::before,
 .home-page .project-link-card:focus-within .project-card::before,
-.home-page .:hover::before{
+.home-page .project-card-locked:hover::before{
   opacity:1 !important;
 }
 
@@ -2729,8 +2854,8 @@ h3 + p,
 .home-page .project-card:hover .project-card-desc,
 .home-page .project-link-card:focus-within .project-card .project-meta,
 .home-page .project-link-card:focus-within .project-card .project-card-desc,
-.home-page .:hover .project-meta,
-.home-page .:hover .project-card-desc{
+.home-page .project-card-locked:hover .project-meta,
+.home-page .project-card-locked:hover .project-card-desc{
   opacity:1 !important;
   transform:translateY(0) !important;
 }
@@ -2765,6 +2890,13 @@ h3 + p,
   color:rgba(255,255,255,.92) !important;
   font-size:18px !important;
   line-height:1.48 !important;
+}
+
+.home-page .terpafy-dev-badge{
+  background:rgba(255,255,255,.16) !important;
+  border:1px solid rgba(255,255,255,.22) !important;
+  color:#FFFFFF !important;
+  font-size:12px !important;
 }
 
 /* Mobile: sem esconder informação essencial */
@@ -3014,7 +3146,7 @@ h4 + p,
 
 .home-page .project-card:hover .project-media img,
 .home-page .project-link-card:focus-within .project-card .project-media img,
-.home-page .:hover .project-media img{
+.home-page .project-card-locked:hover .project-media img{
   filter:blur(9px) brightness(.58) saturate(.9) !important;
   transform:scale(1.045) !important;
   opacity:.78 !important;
@@ -3058,7 +3190,7 @@ h4 + p,
 @media(max-width:900px){
   .home-page .project-card:hover .project-media img,
   .home-page .project-link-card:focus-within .project-card .project-media img,
-  .home-page .:hover .project-media img{
+  .home-page .project-card-locked:hover .project-media img{
     filter:none !important;
     transform:none !important;
     opacity:1 !important;
@@ -3066,528 +3198,483 @@ h4 + p,
 }
 
 </style>
-<style id="home-terpafy-hover-corrigido">
+<style id="closing-cards-real-equal-final">
 
-/* Home · Terpafy liberado sem quebrar hover */
-.home-page .terpafy-link{
+/* CORREÇÃO REAL: os 3 cards finais com a MESMA estrutura visual */
+.doglibrary-page section:has(.final-card),
+.kidzenith-page section:has(.final),
+.terpafy-page .closing{
+  padding-block:96px !important;
+  background:#FFFFFF !important;
+}
+
+.doglibrary-page section:has(.final-card) .container,
+.kidzenith-page section:has(.final) .container,
+.terpafy-page .closing .container{
+  width:min(100% - 48px, 1180px) !important;
+  margin-inline:auto !important;
+}
+
+.doglibrary-page .final-card,
+.kidzenith-page .final,
+.terpafy-page .closing-card{
+  width:100% !important;
+  max-width:none !important;
+  min-height:360px !important;
+  padding:56px !important;
+  border-radius:20px !important;
+  background:#FFFFFF !important;
+  border:1px solid rgba(0,0,0,.075) !important;
+  box-shadow:0 12px 36px rgba(0,0,0,.055) !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:flex-start !important;
+  justify-content:center !important;
+  gap:20px !important;
+  box-sizing:border-box !important;
+  margin:0 !important;
+}
+
+/* remove/neutraliza qualquer label superior */
+.doglibrary-page .final-card .eyebrow,
+.kidzenith-page .final .eyebrow,
+.terpafy-page .closing-card .eyebrow{
+  display:none !important;
+}
+
+.doglibrary-page .final-card h2,
+.kidzenith-page .final h2,
+.terpafy-page .closing-card h2{
+  width:100% !important;
+  max-width:100% !important;
+  margin:0 !important;
+  padding:0 !important;
   display:block !important;
-  color:inherit !important;
-  text-decoration:none !important;
-  cursor:pointer !important;
+  font-size:46px !important;
+  line-height:1.08 !important;
+  letter-spacing:0 !important;
+  font-weight:600 !important;
+  color:#1D1D1F !important;
+  white-space:normal !important;
+  word-break:normal !important;
+  overflow-wrap:normal !important;
+  text-wrap:balance !important;
 }
 
-.home-page .terpafy-link .project-card{
-  cursor:pointer !important;
+.doglibrary-page .final-card p,
+.kidzenith-page .final p,
+.terpafy-page .closing-card p{
+  width:100% !important;
+  max-width:760px !important;
+  margin:0 !important;
+  padding:0 !important;
+  font-size:17px !important;
+  line-height:1.58 !important;
+  letter-spacing:0 !important;
+  font-weight:400 !important;
+  color:#6E6E73 !important;
 }
 
-/* garante que o hover continue sendo calculado no próprio card */
-.home-page .terpafy-link,
-.home-page .terpafy-link .project-card,
-.home-page .terpafy-link .project-media,
-.home-page .terpafy-link .project-media-inner{
-  pointer-events:auto !important;
-}
-
-</style>
-<style id="home-project-cards-blur-final">
-
-/* Home · blur e contraste nos DOIS cards menores de projeto */
-.home-page #work .project-grid .project-link-card .project-card{
-  position:relative !important;
-  overflow:hidden !important;
-  cursor:pointer !important;
-}
-
-.home-page #work .project-grid .project-link-card .project-card::before{
-  content:"" !important;
-  position:absolute !important;
-  inset:0 !important;
-  z-index:2 !important;
-  opacity:0 !important;
-  pointer-events:none !important;
-  background:rgba(13,13,15,.68) !important;
-  backdrop-filter:blur(18px) saturate(118%) !important;
-  -webkit-backdrop-filter:blur(18px) saturate(118%) !important;
-  transition:opacity .32s cubic-bezier(.22,1,.36,1) !important;
-}
-
-.home-page #work .project-grid .project-link-card:hover .project-card::before,
-.home-page #work .project-grid .project-link-card:focus-within .project-card::before{
-  opacity:1 !important;
-}
-
-.home-page #work .project-grid .project-link-card .project-media img{
-  transition:
-    filter .34s cubic-bezier(.22,1,.36,1),
-    transform .34s cubic-bezier(.22,1,.36,1),
-    opacity .34s cubic-bezier(.22,1,.36,1) !important;
-}
-
-.home-page #work .project-grid .project-link-card:hover .project-media img,
-.home-page #work .project-grid .project-link-card:focus-within .project-media img{
-  filter:blur(9px) brightness(.58) saturate(.9) !important;
-  transform:scale(1.045) !important;
-  opacity:.78 !important;
-}
-
-.home-page #work .project-grid .project-link-card .project-meta,
-.home-page #work .project-grid .project-link-card .project-card-desc{
-  z-index:3 !important;
-}
-
-.home-page #work .project-grid .project-link-card:hover .project-meta,
-.home-page #work .project-grid .project-link-card:hover .project-card-desc,
-.home-page #work .project-grid .project-link-card:focus-within .project-meta,
-.home-page #work .project-grid .project-link-card:focus-within .project-card-desc{
-  opacity:1 !important;
-  transform:translateY(0) !important;
-}
-
-.home-page #work .project-grid .project-link-card:hover .project-meta h3,
-.home-page #work .project-grid .project-link-card:focus-within .project-meta h3{
-  color:#FFFFFF !important;
-}
-
-.home-page #work .project-grid .project-link-card:hover .project-meta small,
-.home-page #work .project-grid .project-link-card:hover .project-card-desc,
-.home-page #work .project-grid .project-link-card:focus-within .project-meta small,
-.home-page #work .project-grid .project-link-card:focus-within .project-card-desc{
-  color:rgba(255,255,255,.92) !important;
-}
-
-.home-page #work .project-grid .project-link-card:hover .project-label,
-.home-page #work .project-grid .project-link-card:focus-within .project-label{
-  color:#FFFFFF !important;
-  background:rgba(255,255,255,.16) !important;
-  border-color:rgba(255,255,255,.28) !important;
-}
-
-/* Terpafy segue clicável e sem trava */
-.home-page #work .project-grid .terpafy-link{
-  display:block !important;
-  color:inherit !important;
-  text-decoration:none !important;
-  pointer-events:auto !important;
-  cursor:pointer !important;
-}
-
-.home-page #work .project-grid .terpafy-link .project-card{
-  pointer-events:auto !important;
-  cursor:pointer !important;
-}
-
-@media(max-width:900px){
-  .home-page #work .project-grid .project-link-card .project-card::before{
-    display:none !important;
+@media(max-width:720px){
+  .doglibrary-page section:has(.final-card),
+  .kidzenith-page section:has(.final),
+  .terpafy-page .closing{
+    padding-block:72px !important;
   }
 
-  .home-page #work .project-grid .project-link-card:hover .project-media img,
-  .home-page #work .project-grid .project-link-card:focus-within .project-media img{
-    filter:none !important;
-    transform:none !important;
-    opacity:1 !important;
+  .doglibrary-page section:has(.final-card) .container,
+  .kidzenith-page section:has(.final) .container,
+  .terpafy-page .closing .container{
+    width:min(100% - 32px, 1180px) !important;
+  }
+
+  .doglibrary-page .final-card,
+  .kidzenith-page .final,
+  .terpafy-page .closing-card{
+    min-height:300px !important;
+    padding:34px !important;
+  }
+
+  .doglibrary-page .final-card h2,
+  .kidzenith-page .final h2,
+  .terpafy-page .closing-card h2{
+    font-size:38px !important;
+  }
+
+  .doglibrary-page .final-card p,
+  .kidzenith-page .final p,
+  .terpafy-page .closing-card p{
+    font-size:15px !important;
   }
 }
 
 </style>
-<style id="mobile-projects-spacing-fix">
+<style id="closing-cards-text-centered-final">
 
-/* Mobile · corrigir espaçamento excessivo entre projetos */
-@media(max-width:900px){
-  .home-page #work{
-    padding-bottom:72px !important;
-  }
-
-  .home-page #work .container{
-    display:block !important;
-  }
-
-  .home-page #work .project-grid{
-    display:grid !important;
-    grid-template-columns:1fr !important;
-    gap:24px !important;
-    row-gap:24px !important;
-    margin-top:24px !important;
-    align-items:start !important;
-  }
-
-  .home-page #work .project-link-card{
-    display:block !important;
-    height:auto !important;
-    min-height:0 !important;
-    margin:0 !important;
-    padding:0 !important;
-  }
-
-  .home-page #work .project-link-card + .project-link-card{
-    margin-top:0 !important;
-  }
-
-  .home-page #work .project-card{
-    display:block !important;
-    height:auto !important;
-    min-height:0 !important;
-    max-height:none !important;
-    margin:0 !important;
-    padding:0 !important;
-    overflow:hidden !important;
-    background:#F5F5F7 !important;
-    border-radius:20px !important;
-  }
-
-  .home-page #work .project-media{
-    height:auto !important;
-    min-height:0 !important;
-    aspect-ratio:16 / 10 !important;
-    margin:0 !important;
-    padding:0 !important;
-    border-radius:20px 20px 0 0 !important;
-    overflow:hidden !important;
-  }
-
-  .home-page #work .project-media-inner{
-    height:100% !important;
-    min-height:0 !important;
-  }
-
-  .home-page #work .project-media img,
-  .home-page #work .project-media video{
-    width:100% !important;
-    height:100% !important;
-    object-fit:cover !important;
-    object-position:center center !important;
-    display:block !important;
-    transform:none !important;
-  }
-
-  .home-page #work .project-card::before,
-  .home-page #work .project-card::after{
-    display:none !important;
-    content:none !important;
-  }
-
-  .home-page #work .project-card .project-meta,
-  .home-page #work .project-card .project-card-desc{
-    position:relative !important;
-    inset:auto !important;
-    top:auto !important;
-    right:auto !important;
-    bottom:auto !important;
-    left:auto !important;
-    opacity:1 !important;
-    transform:none !important;
-    pointer-events:auto !important;
-    z-index:1 !important;
-    margin:0 !important;
-  }
-
-  .home-page #work .project-card .project-meta{
-    padding:22px 22px 10px !important;
-    display:grid !important;
-    grid-template-columns:1fr !important;
-    gap:10px !important;
-    align-items:start !important;
-  }
-
-  .home-page #work .project-card .project-card-desc{
-    padding:0 22px 22px !important;
-    max-width:none !important;
-    color:#6E6E73 !important;
-    font-size:14px !important;
-    line-height:1.48 !important;
-  }
-
-  .home-page #work .project-card .project-meta h3{
-    color:#1D1D1F !important;
-    font-size:24px !important;
-    line-height:1.05 !important;
-    margin:0 0 6px !important;
-  }
-
-  .home-page #work .project-card .project-meta small{
-    color:#86868B !important;
-    font-size:13px !important;
-    line-height:1.35 !important;
-  }
-
-  .home-page #work .project-card .project-label{
-    justify-self:start !important;
-    color:#6E6E73 !important;
-    background:#FFFFFF !important;
-    border:1px solid rgba(0,0,0,.075) !important;
-    text-align:left !important;
-    white-space:normal !important;
-    width:auto !important;
-    max-width:100% !important;
-    font-size:11px !important;
-    line-height:1.25 !important;
-    padding:7px 10px !important;
-  }
-
-  .home-page #work .project-link-card:hover .project-media img,
-  .home-page #work .project-link-card:focus-within .project-media img{
-    filter:none !important;
-    transform:none !important;
-    opacity:1 !important;
-  }
+/* Centralização dos textos nos 3 cards finais */
+.doglibrary-page .final-card,
+.kidzenith-page .final,
+.terpafy-page .closing-card{
+  align-items:center !important;
+  justify-content:center !important;
+  text-align:center !important;
 }
 
-</style>
-<style id="home-portrait-container-removed">
-
-/* Home · imagem da hero sem container/card */
-.home-page .portrait-area{
-  position:relative !important;
-}
-
-.home-page .portrait-photo{
-  display:block !important;
-  width:min(88%, 430px) !important;
-  max-width:430px !important;
-  height:auto !important;
+.doglibrary-page .final-card h2,
+.kidzenith-page .final h2,
+.terpafy-page .closing-card h2{
+  text-align:center !important;
   margin-left:auto !important;
-  margin-right:0 !important;
-  border:0 !important;
-  outline:0 !important;
-  box-shadow:none !important;
-  background:transparent !important;
-  backdrop-filter:none !important;
-  -webkit-backdrop-filter:none !important;
-  object-fit:contain !important;
-  opacity:1 !important;
-  filter:none !important;
-  mix-blend-mode:normal !important;
-  transform:scaleX(-1) !important;
+  margin-right:auto !important;
 }
 
-/* Neutraliza qualquer regra global antiga que ainda procure o card removido */
-.home-page .portrait-card,
-.home-page .portrait-card.glass,
-.home-page .portrait-card.float{
-  border:0 !important;
-  outline:0 !important;
-  box-shadow:none !important;
-  background:transparent !important;
-  backdrop-filter:none !important;
-  -webkit-backdrop-filter:none !important;
+.doglibrary-page .final-card p,
+.kidzenith-page .final p,
+.terpafy-page .closing-card p{
+  text-align:center !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  max-width:760px !important;
 }
 
-.home-page .portrait-card::before,
-.home-page .portrait-card::after{
-  content:none !important;
-  display:none !important;
+</style>
+<style id="doglibrary-gallery-images-fix">
+
+/* DogLibrary · garantir imagens visíveis na galeria */
+.doglibrary-page .dog-gallery-wrap,
+.doglibrary-page .dog-gallery-frame,
+.doglibrary-page .dog-gallery-ghost{
+  overflow:hidden !important;
 }
 
-/* Mantém o card Atualmente independente da imagem */
-.home-page .arete-current-link{
-  position:absolute !important;
-  z-index:5 !important;
-  text-decoration:none !important;
+.doglibrary-page .dog-gallery-frame img,
+.doglibrary-page .dog-gallery-ghost img{
   display:block !important;
+  width:100% !important;
+  height:100% !important;
+  object-fit:contain !important;
+  object-position:top center !important;
+  opacity:1 !important;
+  visibility:visible !important;
 }
 
-.home-page .arete-current-link::before,
-.home-page .arete-current-link::after{
-  content:none !important;
-  display:none !important;
-}
-
-@media(max-width:920px){
-  .home-page .portrait-photo{
-    width:min(88%, 360px) !important;
-    max-width:360px !important;
-    margin-inline:auto !important;
-  }
+.doglibrary-page .dog-gallery-frame{
+  background:#F5F5F7 !important;
 }
 
 </style>
 </head>
-<body class="home-page">
-<header class="nav-wrap">
-<nav class="glass">
-<a class="brand" href="#top">Isabela<span class="brand-period">.</span></a>
-<ul class="nav-links">
-        <li><a href="#about">Sobre</a></li>
-        <li><a href="#work">Projetos</a></li>
-        <li><a href="#skills">Skills</a></li>
-        <li><a href="#contact">Contato</a></li>
+<body class="loading doglibrary-page">
+<div class="loader" id="loader">
+    <div class="doglibrary-gif-loader" aria-label="Carregando DogLibrary">
+      <img src="/assets/loading-gif-doglibrary.gif" alt="">
+    </div>
+  </div>
+<div class="page">
+  <div class="noise"></div>
+  <div class="nav-wrap">
+    <nav class="glass">
+      <a class="brand" href="/">Isabela<span class="brand-period">.</span></a>
+      <ul class="nav-links">
+        <li><a href="#problema">Problema</a></li>
+        <li><a href="#processo">Arquitetura</a></li>
+        <li><a href="#wireframes">Wireframes</a></li>
+        <li><a href="#solucoes">Soluções</a></li>
       </ul>
-<a class="nav-cta" href="#contact">Vamos conversar</a>
-</nav>
-</header>
-<main id="top">
-<section class="hero">
-<div class="container">
-<div class="hero-grid">
-<div>
-<p class="hello reveal">Hello, me chamo—</p>
-<h1 class="reveal">Isa<span class="accent">b</span>ela</h1>
-<p class="hero-copy reveal">Transformando interfaces em experiências <strong>mais leves, intuitivas</strong> e humanas.</p>
-<div class="hero-actions reveal">
-<a class="primary-btn" href="#work">Projetos selecionados <span>↗</span></a>
-<a class="text-link" href="#contact">Entrar em contato</a>
-</div>
-</div>
-<div class="portrait-area reveal">
-<img class="portrait-photo float" alt="Retrato de Isabela Amaral" src="assets/isabela-portrait.png" decoding="async" draggable="false">
-<a href="https://www.aretenegocios.com" target="_blank" rel="noopener noreferrer" class="arete-current-link arete-card" aria-label="Abrir site da Aretê Negócios e Patrimônio em uma nova aba">
-          <div class="current-card glass float">
-<span class="kicker">Atualmente</span>
-<p>Trabalhando em Aretê Negócios e Patrimônio como Supervisora de Design.</p>
-</div>
-        </a>
-</div>
-</div>
-<div aria-label="Áreas de atuação" class="marquee">
-<div class="marquee-track">
-<div class="marquee-group">
-<span class="marquee-item">UI Design <span class="star">✦</span></span>
-<span class="marquee-item">UX Design <span class="star">✦</span></span>
-<span class="marquee-item">Design Systems <span class="star">✦</span></span>
-<span class="marquee-item">Product Thinking <span class="star">✦</span></span>
-<span class="marquee-item">Interação Humano-Computador (IHC/UX) <span class="star">✦</span></span>
-<span class="marquee-item">IA Aplicada ao Design <span class="star">✦</span></span>
-</div>
-<div aria-hidden="true" class="marquee-group">
-<span class="marquee-item">UI Design <span class="star">✦</span></span>
-<span class="marquee-item">UX Design <span class="star">✦</span></span>
-<span class="marquee-item">Design Systems <span class="star">✦</span></span>
-<span class="marquee-item">Product Thinking <span class="star">✦</span></span>
-<span class="marquee-item">Interação Humano-Computador (IHC/UX) <span class="star">✦</span></span>
-<span class="marquee-item">IA Aplicada ao Design <span class="star">✦</span></span>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section class="section" id="about">
-<div class="container">
-<div class="section-head">
-<p class="kicker reveal">01 — Sobre</p>
-<h2 class="reveal">Crio <em style="font-weight:300;color:var(--purple)">interfaces para pessoas</em> — experiências digitais com clareza, cuidado e intenção.</h2>
-</div>
-<div class="about-grid">
-<div class="reveal">
-<p>Acredito que boas interfaces tornam a tecnologia menos distante e mais fácil de usar. Meu trabalho combina UI Design, UX, sistemas visuais e sensibilidade estética para transformar ideias em experiências mais claras e humanas.</p>
-<p style="margin-top:18px">Design, para mim, é traduzir complexidade com cuidado: cada detalhe precisa ajudar a pessoa a se orientar, decidir e seguir com mais confiança.</p>
-</div>
-<div class="quote glass reveal">
-<p>"Uma boa interface guia sem interromper."</p>
-<small>Meu olhar sobre design</small>
-</div>
-</div>
-</div>
-</section>
+      <a class="nav-cta" href="/">Voltar para home</a>
+    </nav>
+  </div>
 
-<section class="section" id="work">
-<div class="container">
-<div class="section-head">
-<p class="kicker reveal">02 — Projetos</p>
-<h2 class="reveal">Projetos construídos com intenção, clareza e atenção aos detalhes.</h2>
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-grid">
+          <div class="reveal">
+            <p class="kicker">Case study · UX/UI Design</p>
+            <h1>DogLibrary</h1>
+            <p class="hero-copy">Uma plataforma criada para apoiar escolhas mais conscientes na hora de encontrar um cão compatível com a rotina, o espaço e o estilo de vida do futuro tutor.</p>
+            <div class="chips"><span class="chip">Projeto acadêmico</span><span class="chip">Pós-graduação em IHC/UX</span><span class="chip">UX/UI Design</span><span class="chip">Arquitetura da informação</span><span class="chip">Design de interface</span></div>
+          </div>
+
+          <div class="dog-hero-stage reveal" id="dogHeroStage">
+            <div class="dog-hero-phone ghost left">
+              <img src="/assets/dog-ui-all-breeds.jpg" alt="" decoding="async" draggable="false">
+            </div>
+            <div class="dog-hero-phone ghost right">
+              <img src="/assets/dog-ui-filter-kids.jpg" alt="" decoding="async" draggable="false">
+            </div>
+            <div class="dog-hero-phone main" id="dogHeroScreen">
+              <img src="/assets/dog-ui-home.jpg" alt="Tela inicial do DogLibrary" decoding="async" draggable="false">
+            </div>
+          </div>
+        </div>
+        <div class="meta-strip reveal">
+          <div class="meta-card glass"><span class="kicker">Projeto</span><strong>Plataforma web para consulta de raças</strong></div>
+          <div class="meta-card glass"><span class="kicker">Papel</span><strong>UX/UI, sistema visual e prototipação</strong></div>
+          <div class="meta-card glass"><span class="kicker">Foco</span><strong>Decisão consciente e comparação</strong></div>
+          <div class="meta-card glass"><span class="kicker">Entrega</span><strong>Wireframes, interface e sistema visual</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="problema">
+      <div class="container split">
+        <p class="kicker reveal">01 — O problema</p>
+        <div>
+          <h2 class="reveal">Escolher um cão não deveria depender só de aparência ou impulso.</h2>
+          <p class="hero-copy reveal">Muitas pessoas se encantam por uma raça sem entender se ela combina com sua rotina, energia, espaço, tempo disponível e capacidade de cuidado.</p>
+          <div class="problem-list">
+            <article class="problem-item reveal"><div class="problem-number">01</div><div><h3>Escolha impulsiva</h3><p>A aparência ou a popularidade pode pesar mais do que necessidades reais de saúde, energia, socialização e rotina.</p></div></article>
+            <article class="problem-item reveal"><div class="problem-number">02</div><div><h3>Informação dispersa</h3><p>O usuário consulta muitas fontes e ainda assim tem dificuldade para comparar raças com os mesmos critérios.</p></div></article>
+            <article class="problem-item reveal"><div class="problem-number">03</div><div><h3>Compatibilidade pouco visível</h3><p>A decisão passa a considerar não só qual cachorro a pessoa quer, mas qual cachorro combina com sua vida.</p></div></article>
+          </div>
+          <div class="quote-card reveal"><h3>De uma escolha emocional para uma decisão mais orientada.</h3></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="processo">
+      <div class="container">
+        <div class="section-head"><p class="kicker reveal">02 — Arquitetura</p><h2 class="reveal">Organizar informação para reduzir dúvida e apoiar escolhas melhores.</h2></div>
+        <div class="architecture">
+          <article class="arch-card reveal"><span>01</span><h3>Home</h3><p>Entrada emocional e direta para a busca por raças.</p></article>
+          <article class="arch-card reveal"><span>02</span><h3>Filtros</h3><p>Critérios como dócil, guarda, crianças, esportivo e preguiçoso.</p></article>
+          <article class="arch-card reveal"><span>03</span><h3>Perfil da raça</h3><p>História, saúde, cuidados, características e alertas.</p></article>
+          <article class="arch-card reveal"><span>04</span><h3>Favoritos</h3><p>Continuidade da decisão para comparar depois.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="wireframes">
+      <div class="container">
+        <div class="section-head"><p class="kicker reveal">03 — Wireframes</p><h2 class="reveal">Da estrutura ao produto visual.</h2></div>
+        <div class="wire-grid">
+          <article class="compare-card reveal"><img src="/assets/dog-wireframe-home.png" alt="Wireframe da home" decoding="async" draggable="false"><div class="caption"><h3>Home</h3><span>Wireframe</span></div></article>
+          <article class="compare-card reveal"><img src="/assets/dog-home.jpg" alt="Tela final da home" decoding="async" draggable="false"><div class="caption"><h3>Home</h3><span>Interface final</span></div></article>
+          <article class="compare-card reveal"><img src="/assets/dog-wireframe-all-breeds.png" alt="Wireframe da lista de raças" decoding="async" draggable="false"><div class="caption"><h3>Todas as raças</h3><span>Wireframe</span></div></article>
+          <article class="compare-card reveal"><img src="/assets/dog-all-breeds.png" alt="Tela final da lista de raças" decoding="async" draggable="false"><div class="caption"><h3>Todas as raças</h3><span>Interface final</span></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="solucoes">
+      <div class="container">
+        <div class="section-head"><p class="kicker reveal">04 — Soluções</p><h2 class="reveal">Soluções pensadas para clareza, comparação e continuidade.</h2></div>
+        <div class="solutions">
+          <article class="solution-card reveal"><div class="dot" style="background:var(--dog-lavender)"></div><h3>Filtros por compatibilidade</h3><p>O usuário encontra raças a partir de critérios comportamentais e práticos ligados à rotina.</p></article>
+          <article class="solution-card reveal"><div class="dot" style="background:var(--dog-coral)"></div><h3>Cards comparáveis</h3><p>As raças seguem um padrão visual com dados essenciais, facilitando comparação rápida.</p></article>
+          <article class="solution-card reveal"><div class="dot" style="background:var(--dog-mint)"></div><h3>Perfil detalhado</h3><p>Cada raça possui uma página com história, características, saúde, cuidados e alertas.</p></article>
+          <article class="solution-card reveal"><div class="dot" style="background:var(--dog-blue)"></div><h3>Favoritos</h3><p>Raças de interesse podem ser salvas para que a escolha continue com mais calma.</p></article>
+          <article class="solution-card reveal"><div class="dot" style="background:#675BB5"></div><h3>Estado de erro útil</h3><p>A tela de raça não encontrada mantém o usuário orientado e evita uma experiência sem saída.</p></article>
+          <article class="solution-card reveal"><div class="dot" style="background:#FD7C5F"></div><h3>Notificações</h3><p>Alertas e novidades reforçam continuidade e mantêm o usuário informado.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="sistema-visual">
+      <div class="container">
+        <div class="palette-section reveal">
+          <div class="palette-top"><div><p class="kicker">05 — Sistema visual</p><h2>Desbloqueie as cores do DogLibrary.</h2><p>Clique nas cores para descobrir como cada uma apoia a experiência, da navegação aos alertas e estados emocionais da interface.</p></div><div class="unlock-panel" id="colorPanel"><small>Cor selecionada</small><h3>Escolha uma cor</h3><p>Cada cor revela uso, intenção e função dentro do sistema visual.</p></div></div>
+          <div class="color-grid" id="colorGrid">
+            <button class="color-card" data-name="Purple 1" data-hex="#A2A5FF" data-use="Destaques suaves, elementos de interface e áreas de orientação." data-feel="Leveza, confiança e acolhimento."><div class="swatch" style="background:#A2A5FF"></div><strong>Purple 1</strong><span>#A2A5FF</span></button>
+            <button class="color-card" data-name="Main Purple" data-hex="#7A6DDA" data-use="Links ativos, títulos de destaque, navegação e estados selecionados." data-feel="Identidade, tecnologia e direção."><div class="swatch" style="background:#7A6DDA"></div><strong>Main Purple</strong><span>#7A6DDA</span></button>
+            <button class="color-card" data-name="Soft Purple" data-hex="#675BB5" data-use="Profundidade visual, apoio e elementos secundários." data-feel="Equilíbrio e continuidade."><div class="swatch" style="background:#675BB5"></div><strong>Soft Purple</strong><span>#675BB5</span></button>
+            <button class="color-card" data-name="Blue" data-hex="#3154C8" data-use="Ênfase, contraste e momentos de maior direcionamento." data-feel="Clareza, segurança e foco."><div class="swatch" style="background:#3154C8"></div><strong>Blue</strong><span>#3154C8</span></button>
+            <button class="color-card" data-name="Mint Blue" data-hex="#B5E3D8" data-use="Fundos suaves, tags positivas e áreas de respiro." data-feel="Bem-estar, cuidado e tranquilidade."><div class="swatch" style="background:#B5E3D8"></div><strong>Mint Blue</strong><span>#B5E3D8</span></button>
+            <button class="color-card" data-name="Coral" data-hex="#FD7C5F" data-use="Alertas, favoritos, marcações emocionais e pontos de atenção." data-feel="Afeto, energia e proximidade."><div class="swatch" style="background:#FD7C5F"></div><strong>Coral</strong><span>#FD7C5F</span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="interfaces" class="dog-mockup-section">
+      <div class="container">
+        <div class="section-grid">
+          <div>
+            <div class="eyebrow">06 · Interfaces finais</div>
+          </div>
+          <div>
+            <h2 class="section-title">Uma galeria interativa dos principais momentos da experiência.</h2>
+            <p class="section-copy" style="margin-top:26px">
+              As telas aparecem em destaque central, com as interfaces anteriores e próximas ao fundo em blur leve, para mostrar o fluxo sem perder a qualidade visual das capturas.
+            </p>
+          </div>
+        </div>
+
+        <div class="dog-gallery-wrap reveal">
+          <div class="dog-gallery-ghost left"><img id="dogPrevShot" src="/assets/dog-ui-not-found.jpg" alt="" decoding="async" draggable="false"></div>
+          <div class="dog-gallery-frame" id="dogGalleryFrame">
+            <img id="dogMainShot" src="/assets/dog-ui-home.jpg" alt="Interface do DogLibrary" decoding="async" draggable="false">
+          </div>
+          <div class="dog-gallery-ghost right"><img id="dogNextShot" src="/assets/dog-ui-all-breeds.jpg" alt="" decoding="async" draggable="false"></div>
+          <button class="dog-gallery-control left" id="dogPrevBtn" aria-label="Tela anterior">‹</button>
+          <button class="dog-gallery-control right" id="dogNextBtn" aria-label="Próxima tela">›</button>
+        </div>
+
+        <div class="dog-gallery-caption" id="dogGalleryCaption">
+          <h3>Home</h3>
+          <p>Entrada simples, emocional e visual para iniciar a busca por raças.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head"><p class="kicker reveal">07 — Decisões de UI</p><h2 class="reveal">As decisões visuais também fazem parte da solução.</h2></div>
+        <div class="ui-decisions">
+          <article class="decision reveal"><span>01</span><h3>Visual acolhedor</h3><p>Formas suaves, ilustrações e cores claras tornam o tema mais emocional e acessível.</p></article>
+          <article class="decision reveal"><span>02</span><h3>Conteúdo em camadas</h3><p>A interface apresenta primeiro o essencial e aprofunda quando o usuário demonstra interesse.</p></article>
+          <article class="decision reveal"><span>03</span><h3>Comparação facilitada</h3><p>Cards padronizados permitem analisar raças usando os mesmos critérios.</p></article>
+          <article class="decision reveal"><span>04</span><h3>Interação emocional</h3><p>Favoritos, notificações e elementos visuais reforçam vínculo e continuidade.</p></article>
+        </div>
+      </div>
+    </section>
+
+    
+  
+    <section class="section ideas-futuras" id="ideias-futuras">
+      <div class="container section-grid">
+        <div>
+          <p class="kicker reveal">08 — Ideias futuras</p>
+        </div>
+        <div>
+          <h2 class="section-title reveal">Uma biblioteca que pode crescer para além dos cães.</h2>
+          <p class="section-copy reveal">Um próximo passo incrível seria expandir o DogLibrary para outros tipos de animais, ajudando tutores a entenderem necessidades, rotina, espaço e cuidados antes da adoção ou compra.</p>
+          <div class="animal-ideas reveal">
+            <article class="glass animal-card"><span>🐈</span><h3>Gatos</h3><p>Perfis por temperamento, independência, ambiente ideal e cuidados de saúde.</p></article>
+            <article class="glass animal-card"><span>🐹</span><h3>Ratos e hamsters</h3><p>Orientações para habitat, enriquecimento ambiental, alimentação e manejo seguro.</p></article>
+            <article class="glass animal-card"><span>🐴</span><h3>Cavalos e pôneis</h3><p>Conteúdos sobre espaço, rotina, comportamento, custos e cuidados essenciais.</p></article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+    <section><div class="container"><div class="final-card reveal"><h2>Design como apoio para escolhas mais conscientes.</h2><p>O DogLibrary mostrou como UX pode transformar uma decisão afetiva em uma jornada mais clara, responsável e orientada ao bem-estar.</p></div></div></section>
+  </main><footer class="footer"><div class="container footer-inner"><p>© 2026 Isabela Amaral · DogLibrary Case Study</p><a href="/">Voltar para o portfólio</a></div></footer>
 </div>
-<a aria-label="Abrir projeto DogLibrary" class="project-link-card doglibrary-link" href="/doglibrary">
-<article class="featured-card glass reveal">
-<div class="featured-grid">
-<div class="featured-media">
-<img alt="Capa do projeto DogLibrary" src="assets/doglibrarycapa.svg" decoding="async" draggable="false">
-</div>
-<div class="featured-content">
-<div>
-<p class="kicker"><span class="project-dot"></span>Destaque · 2025</p>
-<h3 class="project-title">DogLibrary <span class="project-arrow">↗</span></h3>
-<p class="project-desc">Plataforma criada para ajudar futuros tutores a descobrirem raças compatíveis com seu estilo de vida, por meio de uma experiência guiada, intuitiva e informativa.</p>
-</div>
-<div class="tags">
-<span class="tag">UX Design</span>
-<span class="tag">UI Design</span>
-<span class="tag">IHC/UX</span>
-</div>
-</div>
-</div>
-</article>
-</a>
-<div class="project-grid">
-<a aria-label="Abrir projeto Kidzenith Onboarding" class="project-link-card kidzenith-link" href="/onboarding">
-<article class="project-card reveal">
-<div class="project-media glass">
-<div class="project-media-inner">
-<img alt="Capa do projeto Kidzenith Onboarding" src="assets/kidzenithcapa.svg" decoding="async" draggable="false">
-</div>
-</div>
-<div class="project-meta">
-<div>
-<h3>Kidzenith</h3>
-<small>Kidzenith Onboarding · 2026</small>
-</div>
-<span class="project-label">UX Writing · UX Design · UI Design · Figma MCP</span>
-</div>
-<p class="project-card-desc">Redesenho do fluxo de onboarding.</p>
-</article>
-</a>
-<a aria-label="Abrir projeto Terpafy" class="project-link-card terpafy-link" href="/terpafy">
-<article class="project-card reveal">
-<div class="project-media glass">
-<div class="project-media-inner">
-<img alt="Capa do projeto Terpafy" src="assets/terpafycapa.svg" decoding="async" draggable="false">
-</div>
-</div>
-<div class="project-meta">
-<div>
-<h3>Terpafy</h3>
-<small>Identidade Visual · 2026</small>
-</div>
-<span class="project-label">Brand Strategy · Visual System · Art Direction</span>
-</div>
-<p class="project-card-desc">Identidade visual para um ecossistema de inteligência cannábica.</p>
-</article>
-</a>
-</div>
-</div>
-</section><section class="section" id="skills">
-<div class="container">
-<div class="section-head">
-<p class="kicker reveal">03 — Skills</p>
-<h2 class="reveal">Competências que combinam design, tecnologia e experiência.</h2>
-</div>
-<div class="skills-grid">
-<article class="skill-card glass reveal"><span class="skill-dot" style="color:var(--pink);background:var(--pink)"></span><span class="skill-number">01</span><h3>UI Design</h3><p>Criação de interfaces digitais intuitivas, organizadas e visualmente consistentes.</p></article>
-<article class="skill-card glass reveal"><span class="skill-dot" style="color:var(--purple);background:var(--purple)"></span><span class="skill-number">02</span><h3>UX Design</h3><p>Experiências centradas em pessoas, com foco em clareza, usabilidade e fluxo.</p></article>
-<article class="skill-card glass reveal"><span class="skill-dot" style="color:var(--sky);background:var(--sky)"></span><span class="skill-number">03</span><h3>Design Systems</h3><p>Organização de componentes, padrões e sistemas visuais escaláveis.</p></article>
-<article class="skill-card glass reveal"><span class="skill-dot" style="color:var(--coral);background:var(--coral)"></span><span class="skill-number">04</span><h3>IA aplicada ao Design</h3><p>Uso de IA para acelerar processos criativos, prototipação e construção de experiências.</p></article>
-<article class="skill-card glass reveal"><span class="skill-dot" style="color:var(--lime);background:var(--lime)"></span><span class="skill-number">05</span><h3>Gamificação</h3><p>Princípios de jogos digitais aplicados à interação, engajamento e experiência do usuário.</p></article>
-<article class="skill-card glass reveal"><span class="skill-dot" style="color:var(--yellow);background:var(--yellow)"></span><span class="skill-number">06</span><h3>Identidade Visual</h3><p>Desenvolvimento de linguagens visuais e direção estética para produtos digitais.</p></article>
-</div>
-</div>
-</section>
-<section class="section contact" id="contact">
-<div class="container" style="max-width:1120px">
-<p class="hello reveal">Vamos criar algo leve, humano e memorável.</p>
-<h2 class="contact-title reveal">Vamos <em>conversar</em>.</h2>
-<div class="contact-grid reveal">
-<a class="email-card glass" href="mailto:belamral.isa@gmail.com">
-<div><p class="kicker">Email</p><p>belamral.isa@gmail.com</p></div><span class="arrow">↗</span>
-</a>
-<div class="social-list">
-<a class="social-card glass" href="https://instagram.com/bela.mral" rel="noreferrer" target="_blank"><div><p class="kicker">Instagram</p><p>@bela.mral</p></div><span class="social-dot" style="color:var(--pink);background:var(--pink)"></span></a>
-<a class="social-card glass" href="https://www.linkedin.com/in/isabelamral/" rel="noreferrer" target="_blank"><div><p class="kicker">LinkedIn</p><p>/in/isabelamral</p></div><span class="social-dot" style="color:var(--purple);background:var(--purple)"></span></a>
-<a class="social-card glass" href="#"><div><p class="kicker">WhatsApp</p><p>Em breve</p></div><span class="social-dot" style="color:var(--sky);background:var(--sky)"></span></a>
-</div>
-</div>
-</div>
-</section>
-</main>
-<footer>
-<div class="container footer-inner">
-<p>© 2026 Isabela Amaral · UI Designer</p>
-<em>Criado e desenvolvido por Isabela Amaral com apoio de IA.</em>
-</div>
-</footer>
 <script>
-    const observer = new IntersectionObserver((entries)=>{
-      entries.forEach((entry)=>{ if(entry.isIntersecting){ entry.target.classList.add('in'); observer.unobserve(entry.target); } });
-    }, { threshold:.12 });
-    document.querySelectorAll('.reveal').forEach((el)=>observer.observe(el));
-  </script>
+  window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('loader').classList.add('hidden');document.body.classList.remove('loading')},450)});
+  const observer=new IntersectionObserver((entries)=>{entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target)}})},{threshold:.12});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+  document.querySelectorAll('.parallax-card').forEach(card=>{card.addEventListener('mousemove',e=>{const r=card.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5;const y=(e.clientY-r.top)/r.height-.5;card.style.setProperty('--mx',(x*14)+'px');card.style.setProperty('--my',(y*14)+'px')});card.addEventListener('mouseleave',()=>{card.style.setProperty('--mx','0px');card.style.setProperty('--my','0px')})});
+  const panel=document.getElementById('colorPanel');const buttons=document.querySelectorAll('.color-card');const seen=new Set();buttons.forEach(button=>{button.addEventListener('click',()=>{const {name,hex,use,feel}=button.dataset;seen.add(hex);panel.innerHTML=`<small>${hex}</small><h3>${name}</h3><p><strong>Uso:</strong> ${use}</p><p style="margin-top:10px"><strong>Intenção:</strong> ${feel}</p>${seen.size===buttons.length?'<p style="margin-top:14px;color:#3154C8;font-weight:500">Sistema visual desbloqueado.</p>':''}`})});
+  const gallery=[
+    {src:'/assets/dog-home.jpg',title:'Home',text:'Entrada simples, emocional e visual para iniciar a busca por raças.'},
+    {src:'/assets/dog-all-breeds.png',title:'Todas as raças',text:'Listagem completa para comparação rápida entre opções.'},
+    {src:'/assets/dog-filter-docile.jpg',title:'Filtros por perfil',text:'Critérios ajudam o usuário a explorar raças por compatibilidade.'},
+    {src:'/assets/dog-favorites.png',title:'Favoritos',text:'Raças salvas para consulta e comparação posterior.'},
+    {src:'/assets/dog-breed-golden.jpg',title:'Descrição da raça',text:'Conteúdo aprofundado com história, cuidados, saúde e alerta final.'},
+    {src:'/assets/dog-not-found.png',title:'Raça não encontrada',text:'Estado de erro orientado para ajudar o usuário a continuar a jornada.'}
+  ];
+  let current=0;const mainImage=document.getElementById('mainImage'),prevImage=document.getElementById('prevImage'),nextImage=document.getElementById('nextImage'),galleryTitle=document.getElementById('galleryTitle'),galleryText=document.getElementById('galleryText');
+  function renderGallery(){const prev=(current-1+gallery.length)%gallery.length;const next=(current+1)%gallery.length;mainImage.style.opacity=0;setTimeout(()=>{mainImage.src=gallery[current].src;prevImage.src=gallery[prev].src;nextImage.src=gallery[next].src;galleryTitle.textContent=gallery[current].title;galleryText.textContent=gallery[current].text;mainImage.style.opacity=1},180)}
+  const legacyPrevBtn=document.getElementById('prevBtn');const legacyNextBtn=document.getElementById('nextBtn');if(legacyPrevBtn&&legacyNextBtn&&mainImage&&prevImage&&nextImage&&galleryTitle&&galleryText){legacyPrevBtn.addEventListener('click',()=>{current=(current-1+gallery.length)%gallery.length;renderGallery()});legacyNextBtn.addEventListener('click',()=>{current=(current+1)%gallery.length;renderGallery()});}
+</script>
+
+<script id="doglibrary-kidzenith-gallery-script">
+document.addEventListener('DOMContentLoaded', function(){
+  const dogHeroStage = document.getElementById('dogHeroStage');
+  const dogHeroScreen = document.getElementById('dogHeroScreen');
+
+  if(dogHeroStage && dogHeroScreen){
+    dogHeroStage.addEventListener('mousemove', (e) => {
+      const r = dogHeroStage.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - .5;
+      const y = (e.clientY - r.top) / r.height - .5;
+      dogHeroScreen.style.transform = `rotateY(${x * 8}deg) rotateX(${-y * 8}deg) translateY(-4px)`;
+    });
+    dogHeroStage.addEventListener('mouseleave', () => {
+      dogHeroScreen.style.transform = '';
+    });
+  }
+
+  const dogShots = [
+    {
+      src:'/assets/dog-ui-home.jpg',
+      title:'Home',
+      text:'Entrada simples, emocional e visual para iniciar a busca por raças.'
+    },
+    {
+      src:'/assets/dog-ui-all-breeds.jpg',
+      title:'Todas as raças',
+      text:'Listagem completa com cards padronizados para facilitar comparação rápida.'
+    },
+    {
+      src:'/assets/dog-ui-filter-kids.jpg',
+      title:'Filtro por compatibilidade',
+      text:'A busca pode ser refinada por critérios práticos, como bom com crianças.'
+    },
+    {
+      src:'/assets/dog-ui-favorites.jpg',
+      title:'Favoritos',
+      text:'Raças salvas para consulta posterior, apoiando uma decisão com mais calma.'
+    },
+    {
+      src:'/assets/dog-ui-breed-rott.jpg',
+      title:'Descrição da raça',
+      text:'Página detalhada com história, características, cuidados, saúde e alertas.'
+    },
+    {
+      src:'/assets/dog-ui-not-found.jpg',
+      title:'Raça não encontrada',
+      text:'Estado de erro orientado, mantendo o usuário dentro da jornada.'
+    }
+  ];
+
+  let dogCurrent = 0;
+  const main = document.getElementById('dogMainShot');
+  const prev = document.getElementById('dogPrevShot');
+  const next = document.getElementById('dogNextShot');
+  const frame = document.getElementById('dogGalleryFrame');
+  const caption = document.getElementById('dogGalleryCaption');
+  const prevBtn = document.getElementById('dogPrevBtn');
+  const nextBtn = document.getElementById('dogNextBtn');
+
+  function renderDogGallery(direction = 1){
+    if(!main || !prev || !next || !caption || !frame) return;
+
+    const prevIndex = (dogCurrent - 1 + dogShots.length) % dogShots.length;
+    const nextIndex = (dogCurrent + 1) % dogShots.length;
+
+    frame.style.opacity = '.68';
+    frame.style.transform = `translateX(${direction * 12}px) scale(.985)`;
+
+    setTimeout(() => {
+      main.src = dogShots[dogCurrent].src;
+      prev.src = dogShots[prevIndex].src;
+      next.src = dogShots[nextIndex].src;
+      caption.innerHTML = `<h3>${dogShots[dogCurrent].title}</h3><p>${dogShots[dogCurrent].text}</p>`;
+      frame.style.opacity = '1';
+      frame.style.transform = '';
+    }, 170);
+  }
+
+  if(prevBtn){
+    prevBtn.addEventListener('click', () => {
+      dogCurrent = (dogCurrent - 1 + dogShots.length) % dogShots.length;
+      renderDogGallery(-1);
+    });
+  }
+
+  if(nextBtn){
+    nextBtn.addEventListener('click', () => {
+      dogCurrent = (dogCurrent + 1) % dogShots.length;
+      renderDogGallery(1);
+    });
+  }
+
+  renderDogGallery(1);
+});
+</script>
+
+
+
+
+
+
 
 
 <script id="portfolio-animation-performance-script">
@@ -3717,6 +3804,17 @@ h4 + p,
   window.addEventListener('scroll', update, { passive: true });
   button.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
   update();
+})();
+
+</script>
+<script id="doglibrary-final-title-class">
+
+(() => {
+  document.querySelectorAll('h1,h2,h3').forEach((el) => {
+    if ((el.textContent || '').trim().includes('Design como apoio para escolhas mais conscientes')) {
+      el.classList.add('design-final-title');
+    }
+  });
 })();
 
 </script>
